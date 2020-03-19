@@ -7,7 +7,7 @@ All builds from me will be digitally signed as 'Travis J Gutjahr'.
 
 For information on how to build the source code yourself, see [BUILDING.md](BUILDING.md).
 
-[![Build status](https://dev.azure.com/Squirrelies/RE3REmakeSRT/_apis/build/status/x64)](https://dev.azure.com/Squirrelies/RE3REmakeSRT/_build/latest?definitionId=1)
+[![Build Status](https://dev.azure.com/Squirrelies/RE3REmakeSRT/_apis/build/status/x64?branchName=master)](https://dev.azure.com/Squirrelies/RE3REmakeSRT/_build/latest?definitionId=3&branchName=master)
 
 Features to be implemented:
 
