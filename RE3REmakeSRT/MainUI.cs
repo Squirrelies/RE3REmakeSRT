@@ -85,7 +85,7 @@ namespace RE3REmakeSRT
             // Only run the following code if we're rendering inventory.
             if (!Program.programSpecialOptions.Flags.HasFlag(ProgramFlags.NoInventory))
             {
-                GenerateImages();
+                //GenerateImages();
 
                 // Set the width and height of the inventory display so it matches the maximum items and the scaling size of those items.
                 this.inventoryPanel.Width = Program.INV_SLOT_WIDTH * 4;
@@ -111,45 +111,45 @@ namespace RE3REmakeSRT
             lastFullUIDraw = DateTime.UtcNow.Ticks;
         }
 
-        public void GenerateImages()
-        {
-            // Create a black slot image for when side-pack is not equipped.
-            inventoryError = new Bitmap(Program.INV_SLOT_WIDTH, Program.INV_SLOT_HEIGHT, PixelFormat.Format32bppPArgb);
-            using (Graphics grp = Graphics.FromImage(inventoryError))
-            {
-                grp.FillRectangle(new SolidBrush(Color.FromArgb(255, 0, 0, 0)), 0, 0, inventoryError.Width, inventoryError.Height);
-                grp.DrawLine(new Pen(Color.FromArgb(150, 255, 0, 0), 3), 0, 0, inventoryError.Width, inventoryError.Height);
-                grp.DrawLine(new Pen(Color.FromArgb(150, 255, 0, 0), 3), inventoryError.Width, 0, 0, inventoryError.Height);
-            }
+//        public void GenerateImages()
+//        {
+//            // Create a black slot image for when side-pack is not equipped.
+//            inventoryError = new Bitmap(Program.INV_SLOT_WIDTH, Program.INV_SLOT_HEIGHT, PixelFormat.Format32bppPArgb);
+//            using (Graphics grp = Graphics.FromImage(inventoryError))
+//            {
+//                grp.FillRectangle(new SolidBrush(Color.FromArgb(255, 0, 0, 0)), 0, 0, inventoryError.Width, inventoryError.Height);
+//                grp.DrawLine(new Pen(Color.FromArgb(150, 255, 0, 0), 3), 0, 0, inventoryError.Width, inventoryError.Height);
+//                grp.DrawLine(new Pen(Color.FromArgb(150, 255, 0, 0), 3), inventoryError.Width, 0, 0, inventoryError.Height);
+//            }
 
-            // Transform the image into a 32-bit PARGB Bitmap.
-            try
-            {
-                inventoryImage = Properties.Resources.ui0100_iam_texout.Clone(new Rectangle(0, 0, Properties.Resources.ui0100_iam_texout.Width, Properties.Resources.ui0100_iam_texout.Height), PixelFormat.Format32bppPArgb);
-                inventoryImagePatch1 = Properties.Resources._40d_texout.Clone(new Rectangle(0, 0, Properties.Resources._40d_texout.Width, Properties.Resources._40d_texout.Height), PixelFormat.Format32bppPArgb);
-            }
-            catch (Exception ex)
-            {
-                Program.FailFast(string.Format("[{0}] An unhandled exception has occurred. Please see below for details.\r\n\r\n[{1}] {2}\r\n{3}.\r\n\r\nPARGB Transform.", Program.srtVersion, ex.GetType().ToString(), ex.Message, ex.StackTrace), ex);
-            }
+//            // Transform the image into a 32-bit PARGB Bitmap.
+//            try
+//            {
+//                inventoryImage = Properties.Resources.ui0100_iam_texout.Clone(new Rectangle(0, 0, Properties.Resources.ui0100_iam_texout.Width, Properties.Resources.ui0100_iam_texout.Height), PixelFormat.Format32bppPArgb);
+//                inventoryImagePatch1 = Properties.Resources._40d_texout.Clone(new Rectangle(0, 0, Properties.Resources._40d_texout.Width, Properties.Resources._40d_texout.Height), PixelFormat.Format32bppPArgb);
+//            }
+//            catch (Exception ex)
+//            {
+//                Program.FailFast(string.Format("[{0}] An unhandled exception has occurred. Please see below for details.\r\n\r\n[{1}] {2}\r\n{3}.\r\n\r\nPARGB Transform.", Program.srtVersion, ex.GetType().ToString(), ex.Message, ex.StackTrace), ex);
+//            }
 
-            // Rescales the image down if the scaling factor is not 1.
-            if (Program.programSpecialOptions.ScalingFactor != 1d)
-            {
-                try
-                {
-                    inventoryImage = new Bitmap(inventoryImage, (int)Math.Round(inventoryImage.Width * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero), (int)Math.Round(inventoryImage.Height * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero));
-                    inventoryImagePatch1 = new Bitmap(inventoryImagePatch1, (int)Math.Round(inventoryImagePatch1.Width * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero), (int)Math.Round(inventoryImagePatch1.Height * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero));
-                }
-                catch (Exception ex)
-                {
-                    Program.FailFast(string.Format(@"[{0}] An unhandled exception has occurred. Please see below for details.
----
-[{1}] {2}
-{3}", Program.srtVersion, ex.GetType().ToString(), ex.Message, ex.StackTrace), ex);
-                }
-            }
-        }
+//            // Rescales the image down if the scaling factor is not 1.
+//            if (Program.programSpecialOptions.ScalingFactor != 1d)
+//            {
+//                try
+//                {
+//                    inventoryImage = new Bitmap(inventoryImage, (int)Math.Round(inventoryImage.Width * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero), (int)Math.Round(inventoryImage.Height * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero));
+//                    inventoryImagePatch1 = new Bitmap(inventoryImagePatch1, (int)Math.Round(inventoryImagePatch1.Width * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero), (int)Math.Round(inventoryImagePatch1.Height * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero));
+//                }
+//                catch (Exception ex)
+//                {
+//                    Program.FailFast(string.Format(@"[{0}] An unhandled exception has occurred. Please see below for details.
+//---
+//[{1}] {2}
+//{3}", Program.srtVersion, ex.GetType().ToString(), ex.Message, ex.StackTrace), ex);
+//                }
+//            }
+//        }
 
         private void MemoryPollingTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -303,32 +303,32 @@ namespace RE3REmakeSRT
                     if (inv.Quantity == 0)
                         textBrush = Brushes.DarkRed;
                     
-                    TextureBrush imageBrush;
-                    Weapon weapon;
-                    if (inv.IsItem && Program.ItemToImageTranslation.ContainsKey(inv.ItemID))
-                    {
-                        if (inv.ItemID == ItemEnumeration.OldKey)
-                            imageBrush = new TextureBrush(inventoryImagePatch1, Program.ItemToImageTranslation[inv.ItemID]);
-                        else
-                            imageBrush = new TextureBrush(inventoryImage, Program.ItemToImageTranslation[inv.ItemID]);
-                    }
-                    else if (inv.IsWeapon && Program.WeaponToImageTranslation.ContainsKey(weapon = new Weapon() { WeaponID = inv.WeaponID, Attachments = inv.Attachments }))
-                        imageBrush = new TextureBrush(inventoryImage, Program.WeaponToImageTranslation[weapon]);
-                    else
-                        imageBrush = new TextureBrush(inventoryError, new Rectangle(0, 0, Program.INV_SLOT_WIDTH, Program.INV_SLOT_HEIGHT));
+                    //TextureBrush imageBrush;
+                    //Weapon weapon;
+                    //if (inv.IsItem && Program.ItemToImageTranslation.ContainsKey(inv.ItemID))
+                    //{
+                    //    if (inv.ItemID == ItemEnumeration.OldKey)
+                    //        imageBrush = new TextureBrush(inventoryImagePatch1, Program.ItemToImageTranslation[inv.ItemID]);
+                    //    else
+                    //        imageBrush = new TextureBrush(inventoryImage, Program.ItemToImageTranslation[inv.ItemID]);
+                    //}
+                    //else if (inv.IsWeapon && Program.WeaponToImageTranslation.ContainsKey(weapon = new Weapon() { WeaponID = inv.WeaponID, Attachments = inv.Attachments }))
+                    //    imageBrush = new TextureBrush(inventoryImage, Program.WeaponToImageTranslation[weapon]);
+                    //else
+                    //    imageBrush = new TextureBrush(inventoryError, new Rectangle(0, 0, Program.INV_SLOT_WIDTH, Program.INV_SLOT_HEIGHT));
 
-                    // Double-slot item.
-                    if (imageBrush.Image.Width == Program.INV_SLOT_WIDTH * 2)
-                    {
-                        // If we're an odd column, we need to adjust the transform so the image doesn't get split in half and tiled. Not sure why it does this.
-                        if (!evenSlotColumn)
-                            imageBrush.TranslateTransform(Program.INV_SLOT_WIDTH, 0);
+                    //// Double-slot item.
+                    //if (imageBrush.Image.Width == Program.INV_SLOT_WIDTH * 2)
+                    //{
+                    //    // If we're an odd column, we need to adjust the transform so the image doesn't get split in half and tiled. Not sure why it does this.
+                    //    if (!evenSlotColumn)
+                    //        imageBrush.TranslateTransform(Program.INV_SLOT_WIDTH, 0);
 
-                        // Shift the quantity text over into the 2nd slot's area.
-                        textX += Program.INV_SLOT_WIDTH;
-                    }
+                    //    // Shift the quantity text over into the 2nd slot's area.
+                    //    textX += Program.INV_SLOT_WIDTH;
+                    //}
 
-                    e.Graphics.FillRectangle(imageBrush, imageX, imageY, imageBrush.Image.Width, imageBrush.Image.Height);
+                    //e.Graphics.FillRectangle(imageBrush, imageX, imageY, imageBrush.Image.Width, imageBrush.Image.Height);
                     e.Graphics.DrawString((inv.Quantity != -1) ? inv.Quantity.ToString() : "∞", new Font("Consolas", 14, FontStyle.Bold), textBrush, textX, textY, invStringFormat);
                 }
             }
