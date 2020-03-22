@@ -24,6 +24,7 @@ namespace RE3REmakeSRT
         private MultilevelPointer PointerRank { get; set; }
         private MultilevelPointer PointerPlayerHP { get; set; }
         private MultilevelPointer PointerPlayerPoison { get; set; }
+        private MultilevelPointer PointerEnemyEntryCount { get; set; }
         private MultilevelPointer[] PointerEnemyEntries { get; set; }
         private MultilevelPointer[] PointerInventoryEntries { get; set; }
 
@@ -32,6 +33,7 @@ namespace RE3REmakeSRT
         public int PlayerMaxHealth { get; private set; }
         public bool PlayerPoisoned { get; private set; }
         public InventoryEntry[] PlayerInventory { get; private set; }
+        public int EnemyTableCount { get; private set; }
         public EnemyHP[] EnemyHealth { get; private set; }
         public long IGTRunningTimer { get; private set; }
         public long IGTCutsceneTimer { get; private set; }
@@ -74,9 +76,8 @@ namespace RE3REmakeSRT
             PointerPlayerHP = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DCB6C0, 0x50L, 0x20L);
             PointerPlayerPoison = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DCB6C0, 0x50L, 0x20L, 0xF8L);
 
-            PointerEnemyEntries = new MultilevelPointer[32];
-            for (long i = 0; i < PointerEnemyEntries.Length; ++i)
-                PointerEnemyEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D9C830, 0x30L, 0x20L + (i * 0x08L), 0x300L);
+            PointerEnemyEntryCount = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D9C830, 0x30L);
+            GenerateEnemyEntries();
 
             PointerInventoryEntries = new MultilevelPointer[20];
             for (long i = 0; i < PointerInventoryEntries.Length; ++i)
@@ -97,6 +98,20 @@ namespace RE3REmakeSRT
         }
 
         /// <summary>
+        /// Dereferences a 4-byte signed integer via the PointerEnemyEntryCount pointer to detect how large the enemy pointer table is and then create the pointer table entries if required.
+        /// </summary>
+        private void GenerateEnemyEntries()
+        {
+            EnemyTableCount = PointerEnemyEntryCount.DerefInt(0x1CL); // Get the size of the enemy pointer table. This seems to double (4, 8, 16, 32, ...) but never decreases, even after a new game is started.
+            if (PointerEnemyEntries == null || PointerEnemyEntries.Length != EnemyTableCount) // Enter if the pointer table is null (first run) or the size does not match.
+            {
+                PointerEnemyEntries = new MultilevelPointer[EnemyTableCount]; // Create a new enemy pointer table array with the detected size.
+                for (long i = 0; i < PointerEnemyEntries.Length; ++i) // Loop through and create all of the pointers for the table.
+                    PointerEnemyEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D9C830, 0x30L, 0x20L + (i * 0x08L), 0x300L);
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         public void UpdatePointers()
@@ -106,6 +121,8 @@ namespace RE3REmakeSRT
             PointerPlayerPoison.UpdatePointers();
             PointerRank.UpdatePointers();
 
+            PointerEnemyEntryCount.UpdatePointers();
+            GenerateEnemyEntries(); // This has to be here for the next part.
             for (int i = 0; i < PointerEnemyEntries.Length; ++i)
                 PointerEnemyEntries[i].UpdatePointers();
 
@@ -144,6 +161,7 @@ namespace RE3REmakeSRT
             RankScore = PointerRank.DerefFloat(0x5C);
 
             // Enemy HP
+            GenerateEnemyEntries();
             for (int i = 0; i < PointerEnemyEntries.Length; ++i)
                 EnemyHealth[i] = new EnemyHP(PointerEnemyEntries[i].DerefInt(0x54), PointerEnemyEntries[i].DerefInt(0x58));
 

@@ -365,6 +365,9 @@ namespace RE3REmakeSRT
             e.Graphics.DrawString(string.Format("DA Rank: {0}", Program.gameMemory.Rank), new Font("Consolas", 9, FontStyle.Bold), Brushes.Gray, 0, heightOffset + (heightGap * ++i), stdStringFormat);
             e.Graphics.DrawString(string.Format("DA Score: {0}", Program.gameMemory.RankScore), new Font("Consolas", 9, FontStyle.Bold), Brushes.Gray, 0, heightOffset + (heightGap * ++i), stdStringFormat);
 
+            if (Program.programSpecialOptions.Flags.HasFlag(ProgramFlags.Debug))
+                e.Graphics.DrawString(string.Format("Enemy Count: {0}", Program.gameMemory.EnemyTableCount), new Font("Consolas", 9, FontStyle.Bold), Brushes.Gray, 0, heightOffset + (heightGap * ++i), stdStringFormat);
+
             e.Graphics.DrawString("Enemy HP", new Font("Consolas", 10, FontStyle.Bold), Brushes.Red, 0, heightOffset + (heightGap * ++i), stdStringFormat);
             foreach (EnemyHP enemyHP in Program.gameMemory.EnemyHealth.Where(a => a.IsAlive).OrderBy(a => a.Percentage).ThenByDescending(a => a.CurrentHP))
             {
