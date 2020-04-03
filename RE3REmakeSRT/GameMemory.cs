@@ -71,17 +71,17 @@ namespace RE3REmakeSRT
             BaseAddress = NativeWrappers.GetProcessBaseAddress(pid, ProcessMemory.PInvoke.ListModules.LIST_MODULES_64BIT).ToInt64(); // Bypass .NET's managed solution for getting this and attempt to get this info ourselves via PInvoke since some users are getting 299 PARTIAL COPY when they seemingly shouldn't. This is built as x64 only and RE3 is x64 only to my knowledge.
 
             // Setup the pointers.
-            PointerIGT = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DCD520, 0x60L);
-            PointerRank = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DD5CA0);
-            PointerPlayerHP = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DCB6C0, 0x50L, 0x20L);
+            PointerIGT = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DAA3F0, 0x60L); // *
+            PointerRank = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D78258); // *
+            PointerPlayerHP = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D7C5E8, 0x50L, 0x20L); // *
             PointerPlayerPoison = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DCB6C0, 0x50L, 0x20L, 0xF8L);
 
-            PointerEnemyEntryCount = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D9C830, 0x30L);
+            PointerEnemyEntryCount = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D7A5A8, 0x30L); // *
             GenerateEnemyEntries();
 
             PointerInventoryEntries = new MultilevelPointer[20];
             for (long i = 0; i < PointerInventoryEntries.Length; ++i)
-                PointerInventoryEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DCB6C0, 0x50L, 0x98L, 0x10L, 0x20L + (i * 0x08L), 0x18L);
+                PointerInventoryEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D7C5E8, 0x50L, 0x98L, 0x10L, 0x20L + (i * 0x08L), 0x18L); // *
 
             // Initialize variables to default values.
             PlayerCurrentHealth = 0;
@@ -107,7 +107,7 @@ namespace RE3REmakeSRT
             {
                 PointerEnemyEntries = new MultilevelPointer[EnemyTableCount]; // Create a new enemy pointer table array with the detected size.
                 for (long i = 0; i < PointerEnemyEntries.Length; ++i) // Loop through and create all of the pointers for the table.
-                    PointerEnemyEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D9C830, 0x30L, 0x20L + (i * 0x08L), 0x300L);
+                    PointerEnemyEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D7A5A8, 0x30L, 0x20L + (i * 0x08L), 0x300L);
             }
         }
 

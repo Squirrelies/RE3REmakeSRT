@@ -131,7 +131,7 @@ namespace RE3REmakeSRT
 
         public static void GetProcessInfo()
         {
-            Process[] gameProcesses = Process.GetProcessesByName("re3demo");
+            Process[] gameProcesses = Process.GetProcessesByName("re3");
             Debug.WriteLine("RE3 (2020) processes found: {0}", gameProcesses.Length);
             if (gameProcesses.Length != 0)
             {
