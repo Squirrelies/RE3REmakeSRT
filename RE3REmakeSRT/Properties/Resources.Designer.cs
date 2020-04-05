@@ -109,5 +109,25 @@ namespace RE3REmakeSRT.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ui0100_iam_texout {
+            get {
+                object obj = ResourceManager.GetObject("ui0100_iam_texout", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ui0100_wp_iam_texout {
+            get {
+                object obj = ResourceManager.GetObject("ui0100_wp_iam_texout", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

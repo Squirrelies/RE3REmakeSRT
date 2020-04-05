@@ -13,8 +13,8 @@ namespace RE3REmakeSRT
     public class OverlayDrawer : DXOverlay, IDisposable
     {
         private SharpDX.Direct2D1.Bitmap inventoryError;
-        private SharpDX.Direct2D1.Bitmap inventoryImage;
-        private SharpDX.Direct2D1.Bitmap inventoryImagePatch1;
+        private SharpDX.Direct2D1.Bitmap inventoryItemImage;
+        private SharpDX.Direct2D1.Bitmap inventoryWeaponImage;
 
         private static Font consolasBold = null;
         private static SolidBrush darkRedBrush = null;
@@ -48,7 +48,7 @@ namespace RE3REmakeSRT
                 foreBrush = g.CreateSolidBrush(100, 0, 0);
 
                 // Loads the inventory images into memory and scales them if required.
-                //GenerateImages(g, invSlotWidth, invSlotHeight, invSlotScaling);
+                GenerateImages(g, invSlotWidth, invSlotHeight, invSlotScaling);
             });
         }
 
@@ -198,69 +198,69 @@ namespace RE3REmakeSRT
 
         public SharpDX.Mathematics.Interop.RawRectangle RectangleToRawRectangle(System.Drawing.Rectangle r) => new SharpDX.Mathematics.Interop.RawRectangle(r.Left, r.Top, r.Right, r.Bottom);
 
-        //public void GenerateImages(Graphics g, int invSlotWidth, int invSlotHeight, double invSlotScaling = 0.5d)
-        //{
-        //    try
-        //    {
-        //        // Create error inventory image.
-        //        System.Drawing.Bitmap tempInventoryError = null;
-        //        try
-        //        {
-        //            // Create a blank bitmap to draw on.
-        //            tempInventoryError = new System.Drawing.Bitmap(invSlotWidth, invSlotHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-        //            using (System.Drawing.Graphics grp = System.Drawing.Graphics.FromImage(tempInventoryError))
-        //            {
-        //                // Draw the bitmap.
-        //                grp.FillRectangle(new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(255, 0, 0, 0)), 0, 0, tempInventoryError.Width, tempInventoryError.Height);
-        //                grp.DrawLine(new System.Drawing.Pen(System.Drawing.Color.FromArgb(150, 255, 0, 0), 3), 0, 0, tempInventoryError.Width, tempInventoryError.Height);
-        //                grp.DrawLine(new System.Drawing.Pen(System.Drawing.Color.FromArgb(150, 255, 0, 0), 3), tempInventoryError.Width, 0, 0, tempInventoryError.Height);
-        //            }
+        public void GenerateImages(Graphics g, int invSlotWidth, int invSlotHeight, double invSlotScaling = 0.5d)
+        {
+            try
+            {
+                // Create error inventory image.
+                System.Drawing.Bitmap tempInventoryError = null;
+                try
+                {
+                    // Create a blank bitmap to draw on.
+                    tempInventoryError = new System.Drawing.Bitmap(invSlotWidth, invSlotHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                    using (System.Drawing.Graphics grp = System.Drawing.Graphics.FromImage(tempInventoryError))
+                    {
+                        // Draw the bitmap.
+                        grp.FillRectangle(new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(255, 0, 0, 0)), 0, 0, tempInventoryError.Width, tempInventoryError.Height);
+                        grp.DrawLine(new System.Drawing.Pen(System.Drawing.Color.FromArgb(150, 255, 0, 0), 3), 0, 0, tempInventoryError.Width, tempInventoryError.Height);
+                        grp.DrawLine(new System.Drawing.Pen(System.Drawing.Color.FromArgb(150, 255, 0, 0), 3), tempInventoryError.Width, 0, 0, tempInventoryError.Height);
+                    }
 
-        //            // Convert the bitmap from GDI Format32bppPArgb to DXGI R8G8B8A8_UNorm Premultiplied.
-        //            inventoryError = GDIBitmapToSharpDXBitmap(tempInventoryError, g.GetRenderTarget());
-        //        }
-        //        finally
-        //        {
-        //            // Dispose of the GDI bitmaps.
-        //            tempInventoryError?.Dispose();
-        //        }
+                    // Convert the bitmap from GDI Format32bppPArgb to DXGI R8G8B8A8_UNorm Premultiplied.
+                    inventoryError = GDIBitmapToSharpDXBitmap(tempInventoryError, g.GetRenderTarget());
+                }
+                finally
+                {
+                    // Dispose of the GDI bitmaps.
+                    tempInventoryError?.Dispose();
+                }
 
-        //        // Scale and convert the inventory images.
-        //        System.Drawing.Bitmap ui0100_iam_texout = null;
-        //        System.Drawing.Bitmap _40d_texout = null;
-        //        try
-        //        {
-        //            // Create the bitmap from the byte array.
-        //            ui0100_iam_texout = Properties.Resources.ui0100_iam_texout;
-        //            _40d_texout = Properties.Resources._40d_texout;
+                // Scale and convert the inventory images.
+                System.Drawing.Bitmap ui0100_iam_texout = null;
+                System.Drawing.Bitmap ui0100_wp_iam_texout = null;
+                try
+                {
+                    // Create the bitmap from the byte array.
+                    ui0100_iam_texout = Properties.Resources.ui0100_iam_texout;
+                    ui0100_wp_iam_texout = Properties.Resources.ui0100_wp_iam_texout;
 
-        //            // Scale the bitmap.
-        //            if (Program.programSpecialOptions.ScalingFactor != 1d)
-        //            {
-        //                ui0100_iam_texout = new System.Drawing.Bitmap(ui0100_iam_texout, (int)Math.Round(ui0100_iam_texout.Width * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero), (int)Math.Round(ui0100_iam_texout.Height * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero));
-        //                _40d_texout = new System.Drawing.Bitmap(_40d_texout, (int)Math.Round(_40d_texout.Width * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero), (int)Math.Round(_40d_texout.Height * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero));
-        //            }
+                    // Scale the bitmap.
+                    if (Program.programSpecialOptions.ScalingFactor != 1d)
+                    {
+                        ui0100_iam_texout = new System.Drawing.Bitmap(ui0100_iam_texout, (int)Math.Round(ui0100_iam_texout.Width * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero), (int)Math.Round(ui0100_iam_texout.Height * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero));
+                        ui0100_wp_iam_texout = new System.Drawing.Bitmap(ui0100_wp_iam_texout, (int)Math.Round(ui0100_wp_iam_texout.Width * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero), (int)Math.Round(ui0100_wp_iam_texout.Height * Program.programSpecialOptions.ScalingFactor, MidpointRounding.AwayFromZero));
+                    }
 
-        //            // Transform the bitmap into a pre-multiplied alpha.
-        //            ui0100_iam_texout = ui0100_iam_texout.Clone(new System.Drawing.Rectangle(0, 0, ui0100_iam_texout.Width, ui0100_iam_texout.Height), System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-        //            _40d_texout = _40d_texout.Clone(new System.Drawing.Rectangle(0, 0, _40d_texout.Width, _40d_texout.Height), System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                    // Transform the bitmap into a pre-multiplied alpha.
+                    ui0100_iam_texout = ui0100_iam_texout.Clone(new System.Drawing.Rectangle(0, 0, ui0100_iam_texout.Width, ui0100_iam_texout.Height), System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                    ui0100_wp_iam_texout = ui0100_wp_iam_texout.Clone(new System.Drawing.Rectangle(0, 0, ui0100_wp_iam_texout.Width, ui0100_wp_iam_texout.Height), System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
-        //            // Convert the bitmap from GDI Format32bppPArgb to DXGI R8G8B8A8_UNorm Premultiplied.
-        //            inventoryImage = GDIBitmapToSharpDXBitmap(ui0100_iam_texout, g.GetRenderTarget());
-        //            inventoryImagePatch1 = GDIBitmapToSharpDXBitmap(_40d_texout, g.GetRenderTarget());
-        //        }
-        //        finally
-        //        {
-        //            // Dispose of the GDI bitmaps.
-        //            ui0100_iam_texout?.Dispose();
-        //            _40d_texout?.Dispose();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Program.FailFast(Program.GetExceptionMessage(ex), ex);
-        //    }
-        //}
+                    // Convert the bitmap from GDI Format32bppPArgb to DXGI R8G8B8A8_UNorm Premultiplied.
+                    inventoryItemImage = GDIBitmapToSharpDXBitmap(ui0100_iam_texout, g.GetRenderTarget());
+                    inventoryWeaponImage = GDIBitmapToSharpDXBitmap(ui0100_wp_iam_texout, g.GetRenderTarget());
+                }
+                finally
+                {
+                    // Dispose of the GDI bitmaps.
+                    ui0100_iam_texout?.Dispose();
+                    ui0100_wp_iam_texout?.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                Program.FailFast(Program.GetExceptionMessage(ex), ex);
+            }
+        }
 
         private SharpDX.Direct2D1.Bitmap GDIBitmapToSharpDXBitmap(System.Drawing.Bitmap bitmap, SharpDX.Direct2D1.RenderTarget device)
         {
@@ -315,8 +315,8 @@ namespace RE3REmakeSRT
                     // TODO: dispose managed state (managed objects).
                     base.Dispose();
                     inventoryError?.Dispose();
-                    inventoryImage?.Dispose();
-                    inventoryImagePatch1?.Dispose();
+                    inventoryItemImage?.Dispose();
+                    inventoryWeaponImage?.Dispose();
                     consolasBold?.Dispose();
                     darkRedBrush?.Dispose();
                     redBrush?.Dispose();

@@ -5,17 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>RE3 REmake SRT JSON Display Page</title>
+    <script>
+        // USER CONFIGURABLE VARIABLES.
+        const JSON_ADDRESS = '127.0.0.1'; // IP OR HOSTNAME OF THE COMPUTER RUNNING THE SRT. USEFUL FOR MULTIPLE PC STREAMING SETUPS.
+        const JSON_PORT = 7190; // PORT OF THE JSON ENDPOINT. NOT LIKELY TO CHANGE UNLESS YOU COMPILED THE SRT YOURSELF FROM SOURCE CODE.
+		const POLLING_RATE = 333; // THE TIME IN MILLISECONDS WE'LL REQUEST UPDATED VALUES.
+    </script>
     <style>
         body {
             background-color: #000000;
             color: #FFFFFF;
             font-family: Arial;
             }
-        
+
         a {
             color: #FFFFFF;
             }
-
+        
         a:link {
             text-decoration: none;
             }
@@ -31,18 +37,20 @@
         a:active {
             text-decoration: underline;
             }
-        
+
         td {
             text-align: right;
-        }
+            }
     </style>
 </head>
 <body>
     <div id="srtQueryData"></div>
     <script>
+        const JSON_ENDPOINT = `http://${JSON_ADDRESS}:${JSON_PORT}/`;
+
         window.onload = function () {
             getData();
-            setInterval(getData, 333);
+            setInterval(getData, POLLING_RATE);
         }
 
         var Asc = function (a, b) {
@@ -58,7 +66,7 @@
         }
 
         function getData() {
-            fetch('http://localhost:7190/')
+            fetch(JSON_ENDPOINT)
                 .then(function (response) {
                     return response.json();
                 })

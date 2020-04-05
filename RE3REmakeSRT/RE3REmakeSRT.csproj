@@ -313,6 +313,8 @@
     <None Include="Resources\POISON.gif" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\ui0100_iam.texout.png" />
+    <None Include="Resources\ui0100_wp_iam.texout.png" />
     <Content Include="SampleJSONDisplayPage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
