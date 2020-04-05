@@ -11,7 +11,15 @@ All dates are based relative to UTC.
 
 ## [Click here](http://dudley.gg/squirrelies/re3/latest.7z) to download the latest release!
 
-## [Download 1.0.2.0 Alpha](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1020-Alpha-Signed-Debug.7z) (2020-04-03)
+## [Download 1.0.4.0 Beta](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1040-Beta-Signed-Release.7z) (2020-04-05)
+* Added the inventory icons.
+* Adjusted the JSON endpoint to listen on IPv6 as well as IPv4.
+* Moved some variables around in the Sample JSON HTML file. User configurable settings are near the top now.
+
+### [1.0.3.0 Alpha](about:blank) (2020-04-03)
+* Fix for JSON endpoint not listening on all interfaces. Listens on all IPv4 interfaces now.
+
+### [Download 1.0.2.0 Alpha](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1020-Alpha-Signed-Debug.7z) (2020-04-03)
 * Initial release.
 * Icons are still missing but everything should work.
 
