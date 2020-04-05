@@ -11,7 +11,10 @@ All dates are based relative to UTC.
 
 ## [Click here](http://dudley.gg/squirrelies/re3/latest.7z) to download the latest release!
 
-## [Download 1.0.4.0 Beta](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1040-Beta-Signed-Release.7z) (2020-04-05)
+## [Download 1.0.4.1 Beta](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1041-Beta-Signed-Release.7z) (2020-04-05)
+* Fixed the icon for Lightning Hawk w/ Attachment.
+
+### [Download 1.0.4.0 Beta](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1040-Beta-Signed-Release.7z) (2020-04-05)
 * Added the inventory icons.
 * Adjusted the JSON endpoint to listen on IPv6 as well as IPv4.
 * Moved some variables around in the Sample JSON HTML file. User configurable settings are near the top now.
