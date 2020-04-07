@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
@@ -11,6 +14,7 @@ namespace RE3REmakeSRT
         public static ContextMenu contextMenu;
         public static Options programSpecialOptions;
         public static int gamePID;
+        public static byte[] gameHash;
         public static IntPtr gameWindowHandle;
         public static GameMemory gameMemory;
 
@@ -22,6 +26,8 @@ namespace RE3REmakeSRT
 
         public static IReadOnlyDictionary<ItemEnumeration, System.Drawing.Rectangle> ItemToImageTranslation;
         public static IReadOnlyDictionary<Weapon, System.Drawing.Rectangle> WeaponToImageTranslation;
+
+        public static readonly byte[] BIO3Z_Hash = new byte[20] { 0x30, 0x6A, 0x9D, 0x7F, 0x21, 0xAE, 0x16, 0xC8, 0x34, 0xD6, 0xEC, 0xDE, 0x93, 0xD6, 0xA9, 0xF2, 0x53, 0x00, 0x8A, 0x5C };
 
         /// <summary>
         /// The main entry point for the application.
@@ -141,13 +147,23 @@ namespace RE3REmakeSRT
                 }
                 gamePID = gameProcesses[0].Id;
                 //gameWindowHandle = gameProcesses[0].MainWindowHandle;
+                gameHash = CalculateHash(gameProcesses[0].MainModule.FileName);
             }
             else
             {
                 gamePID = -1;
                 //gameWindowHandle = IntPtr.Zero;
+                gameHash = new byte[0];
             }
             gameWindowHandle = PInvoke.GetDesktopWindow();
+            Debug.WriteLine("Game Hash: new byte[{0}] {{ {1} }};", new object[] { gameHash.Length, gameHash.Select(a => "0x" + a.ToString("X2")).Aggregate((o, n) => o + ", " + n) });
+        }
+
+        public static byte[] CalculateHash(string filePath)
+        {
+            using (SHA1 hashAlg = SHA1Managed.Create()) // Doesn't have to be completely free of collisions, just has to be fast. Therefore, using SHA1 rather than SHA256.
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+                return hashAlg.ComputeHash(fs);
         }
 
         public static void FailFast(string message, Exception ex)

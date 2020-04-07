@@ -18,7 +18,15 @@ namespace RE3REmakeSRT
         public int ProcessExitCode => memoryAccess.ProcessExitCode;
         private const string IGT_TIMESPAN_STRING_FORMAT = @"hh\:mm\:ss\.fff";
 
-        // Pointers
+        // Pointer Address Variables
+        private long pointerAddressIGT;
+        private long pointerAddressRank;
+        private long pointerAddressHP;
+        private long pointerAddressInventory;
+        private long pointerAddressEnemy;
+        private long pointerAddressPoison;
+
+        // Pointer Classes
         private long BaseAddress { get; set; }
         private MultilevelPointer PointerIGT { get; set; }
         private MultilevelPointer PointerRank { get; set; }
@@ -69,19 +77,20 @@ namespace RE3REmakeSRT
         {
             memoryAccess = new ProcessMemory.ProcessMemory(pid);
             BaseAddress = NativeWrappers.GetProcessBaseAddress(pid, ProcessMemory.PInvoke.ListModules.LIST_MODULES_64BIT).ToInt64(); // Bypass .NET's managed solution for getting this and attempt to get this info ourselves via PInvoke since some users are getting 299 PARTIAL COPY when they seemingly shouldn't. This is built as x64 only and RE3 is x64 only to my knowledge.
+            SelectPointerAddresses();
 
             // Setup the pointers.
-            PointerIGT = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DAA3F0, 0x60L); // *
-            PointerRank = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D78258); // *
-            PointerPlayerHP = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D7C5E8, 0x50L, 0x20L); // *
-            PointerPlayerPoison = new MultilevelPointer(memoryAccess, BaseAddress + 0x08DCB6C0, 0x50L, 0x20L, 0xF8L);
+            PointerIGT = new MultilevelPointer(memoryAccess, BaseAddress + pointerAddressIGT, 0x60L); // *
+            PointerRank = new MultilevelPointer(memoryAccess, BaseAddress + pointerAddressRank); // *
+            PointerPlayerHP = new MultilevelPointer(memoryAccess, BaseAddress + pointerAddressHP, 0x50L, 0x20L); // *
+            PointerPlayerPoison = new MultilevelPointer(memoryAccess, BaseAddress + pointerAddressPoison, 0x50L, 0x20L, 0xF8L);
 
-            PointerEnemyEntryCount = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D7A5A8, 0x30L); // *
+            PointerEnemyEntryCount = new MultilevelPointer(memoryAccess, BaseAddress + pointerAddressEnemy, 0x30L); // *
             GenerateEnemyEntries();
 
             PointerInventoryEntries = new MultilevelPointer[20];
             for (long i = 0; i < PointerInventoryEntries.Length; ++i)
-                PointerInventoryEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D7C5E8, 0x50L, 0x98L, 0x10L, 0x20L + (i * 0x08L), 0x18L); // *
+                PointerInventoryEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + pointerAddressInventory, 0x50L, 0x98L, 0x10L, 0x20L + (i * 0x08L), 0x18L); // *
 
             // Initialize variables to default values.
             PlayerCurrentHealth = 0;
@@ -97,6 +106,30 @@ namespace RE3REmakeSRT
             RankScore = 0f;
         }
 
+        private void SelectPointerAddresses()
+        {
+            if (Program.gameHash.SequenceEqual(Program.BIO3Z_Hash)) // Japanese CERO Z, latest build.
+            {
+                pointerAddressIGT = 0x08CE8430;
+                pointerAddressRank = 0x08CB62A8;
+                pointerAddressHP = 0x08CBA618;
+                pointerAddressInventory = 0x08CBA618;
+                pointerAddressEnemy = 0x08CB8618;
+
+                pointerAddressPoison = 0x08DCB6C0; // Not actually used right now.
+            }
+            else // World-wide, latest build.
+            {
+                pointerAddressIGT = 0x08DAA3F0;
+                pointerAddressRank = 0x08D78258;
+                pointerAddressHP = 0x08D7C5E8;
+                pointerAddressInventory = 0x08D7C5E8;
+                pointerAddressEnemy = 0x08D7A5A8;
+
+                pointerAddressPoison = 0x08DCB6C0; // Not actually used right now.
+            }
+        }
+
         /// <summary>
         /// Dereferences a 4-byte signed integer via the PointerEnemyEntryCount pointer to detect how large the enemy pointer table is and then create the pointer table entries if required.
         /// </summary>
@@ -107,7 +140,7 @@ namespace RE3REmakeSRT
             {
                 PointerEnemyEntries = new MultilevelPointer[EnemyTableCount]; // Create a new enemy pointer table array with the detected size.
                 for (long i = 0; i < PointerEnemyEntries.Length; ++i) // Loop through and create all of the pointers for the table.
-                    PointerEnemyEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + 0x08D7A5A8, 0x30L, 0x20L + (i * 0x08L), 0x300L);
+                    PointerEnemyEntries[i] = new MultilevelPointer(memoryAccess, BaseAddress + pointerAddressEnemy, 0x30L, 0x20L + (i * 0x08L), 0x300L);
             }
         }
 
