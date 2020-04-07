@@ -11,7 +11,10 @@ All dates are based relative to UTC.
 
 ## [Click here](http://dudley.gg/squirrelies/re3/latest.7z) to download the latest release!
 
-## [Download 1.0.4.1 Beta](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1041-Beta-Signed-Release.7z) (2020-04-05)
+## [Download 1.0.5.0 Beta](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1050-Beta-Signed-Release.7z) (2020-04-07)
+* Added support for the Japanese CERO Z edition of the game.
+
+### [Download 1.0.4.1 Beta](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1041-Beta-Signed-Release.7z) (2020-04-05)
 * Fixed the icon for Lightning Hawk w/ Attachment.
 
 ### [Download 1.0.4.0 Beta](http://dudley.gg/squirrelies/re3/RE3REmakeSRT-1040-Beta-Signed-Release.7z) (2020-04-05)
